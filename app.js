@@ -16,6 +16,30 @@ const PORT = process.env.PORT || 9001
 
 let globalVar = 1
 
+let books = []
+class Book {
+  constructor(title, pages){
+    this.id = books.length
+    this.title =title
+    this.pages = pages
+
+  }
+
+  setTitle(newTitle){
+    this.title = newTitle
+  }
+
+  setPages(newPages){
+    this.pages = newPages
+  }
+}
+
+
+let bookHP  = new Book("Harry Potter",789)
+books.push(bookHP)
+let bookDict  = new Book("Dictionary", 3000)
+books.push(bookDict)
+
 app.get('/', function (req, res) {
   let alternateResponse = {test: 1,
     jordan:2,
@@ -35,8 +59,36 @@ app.get('/randomNumber', function (req, res) {
 });
 
 app.get('/testEndpoint', function (req, res) {
-  res.send("YOU DID IT jeff")
+  res.status(400).send('YIKES LOOK WHAT YOU DID');
 });
+
+// Book Functions
+// get a book by ID
+app.get('/book/:id', function (req,res){
+  let bookId = req.params.id
+  let book = books[bookId]
+  res.send(book);
+})
+
+// get title of a book
+app.get('/book/:id/title', function (req,res){
+  let bookId = req.params.id
+  let book = books[bookId]
+  res.send(book.title);
+})
+
+// change title of a book
+app.patch('/book/:id/title', function (req,res){
+  console.log(req.body)
+  let bookId = req.params.id
+  let book = books[bookId]
+  book.setTitle(req.body.title)
+  res.status(200).send("Changed title to "+ req.body.title);
+})
+
+
+
+
 
 
 app.listen(PORT, function () {
