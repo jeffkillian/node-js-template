@@ -2,6 +2,7 @@ var express = require('express');
 const cors = require('cors');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');// to parse a post request
+var gifEncoder = require('./gifCreator.js')
 var app = express();
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -33,6 +34,11 @@ class Book {
     this.pages = newPages
   }
 }
+
+app.put('/create-gif', function (req, res) {
+  gifEncoder.createGif()
+});
+
 
 
 let bookHP  = new Book("Harry Potter",789)
