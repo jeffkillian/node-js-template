@@ -2,7 +2,7 @@ var express = require('express');
 const cors = require('cors');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');// to parse a post request
-var gifEncoder = require('./gifCreator.js')
+var GifCreator = require('./gifCreator.js')
 var app = express();
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -16,6 +16,8 @@ const PORT = process.env.PORT || 9001
  // don't have connection settings in here because we push// var connection = mysql.createConnection(connectionSettings);
 
 let globalVar = 1
+
+let  gifCreator = new GifCreator();
 
 let books = []
 class Book {
@@ -35,9 +37,29 @@ class Book {
   }
 }
 
-app.put('/create-gif', function (req, res) {
-  gifEncoder.createGif()
+app.post('/start-gif', function (req, res) {
+ 
+  let width = req.body.width
+  let height = req.body.height
+  gifCreator.start(width, height);
+  res.send('worked')
 });
+
+app.post('/add-frame', function (req, res) {
+  let base64 = req.body.base64
+  let delay = req.body.delay
+ 
+  gifCreator.addFrame(base64, delay);
+  res.send('worked')
+});
+
+app.post('/end-gif', function (req, res) {
+  gifCreator.finish()
+  res.send('worked')
+});
+
+
+
 
 
 
